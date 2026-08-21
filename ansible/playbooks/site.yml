@@ -1,0 +1,9 @@
+---
+# Playbook principal : applique les roles aux groupes d'hotes correspondants
+
+# Applique le role common a toutes les machines Linux (Debian + AlmaLinux)
+- name: Configuration de base des machines Linux
+  hosts: linux
+  become: true
+  roles:
+    - common
