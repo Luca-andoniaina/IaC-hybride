@@ -1,0 +1,22 @@
+# Cles SSH privees (jamais versionnees)
+ansible/keys/
+
+# Fichiers vault en clair
+*.vault
+vault_pass.txt
+
+# Fichiers generes par Ansible
+*.retry
+ansible.log
+
+# Environnements Python locaux
+.venv/
+__pycache__/
+
+# Config editeur locale
+.vscode/
+*.swp
+
+# Fichiers OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,2 @@
+# Force LF partout (evite les soucis CRLF entre Windows et WSL2)
+* text=auto eol=lf
