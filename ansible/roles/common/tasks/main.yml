@@ -1,0 +1,15 @@
+---
+# Role common : taches de base appliquees a toutes les machines Linux
+
+# Met a jour le cache des paquets sur les systemes bases sur Debian (apt)
+- name: Mettre a jour le cache apt (Debian)
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+  when: ansible_os_family == "Debian"
+
+# Met a jour le cache des paquets sur les systemes bases sur RedHat (dnf)
+- name: Mettre a jour le cache dnf (AlmaLinux)
+  ansible.builtin.dnf:
+    update_cache: true
+  when: ansible_os_family == "RedHat"
