@@ -3,20 +3,20 @@
   ansible.builtin.hostname:
     name: "{{ inventory_hostname }}"
 
-- name: Définir le fuseau horaire
-  community.general.timezone:
-    name: "{{ baseline_timezone_linux }}"
-
-- name: Activer la synchronisation de l'heure
-  ansible.builtin.service:
-    name: systemd-timesyncd
-    state: started
-    enabled: true
-
 - name: Mettre à jour l'index des paquets
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
+
+- name: Définir le fuseau horaire
+  community.general.timezone:
+    name: "{{ baseline_timezone_linux }}"
+
+- name: Activer la synchronisation de l'heure (service NTP déjà présent)
+  ansible.builtin.service:
+    name: ntpsec
+    state: started
+    enabled: true
 
 - name: Créer le compte dédié à Ansible
   ansible.builtin.user:
