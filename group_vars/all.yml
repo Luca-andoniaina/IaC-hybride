@@ -1,0 +1,5 @@
+---
+baseline_timezone_linux: Indian/Antananarivo
+baseline_create_ansible_account: false
+baseline_ansible_user: ansible
+baseline_windows_search_updates: false

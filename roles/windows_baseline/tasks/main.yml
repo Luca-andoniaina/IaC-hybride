@@ -1,0 +1,39 @@
+---
+- name: Définir le nom d'hôte
+  ansible.windows.win_hostname:
+    name: "{{ inventory_hostname }}"
+  register: baseline_hostname
+
+- name: Redémarrer la machine si le nom a changé
+  ansible.windows.win_reboot:
+    reboot_timeout: 1800
+  when: baseline_hostname.reboot_required
+
+- name: Définir le fuseau horaire
+  ansible.windows.win_timezone:
+    timezone: "{{ baseline_timezone_windows }}"
+
+- name: Activer le service de temps Windows
+  ansible.windows.win_service:
+    name: w32time
+    start_mode: auto
+    state: started
+
+- name: Rechercher les mises à jour de sécurité sans les installer
+  ansible.windows.win_updates:
+    category_names:
+      - SecurityUpdates
+    state: searched
+  when: baseline_windows_search_updates | bool
+
+- name: Créer le compte local dédié à Ansible
+  ansible.windows.win_user:
+    name: "{{ baseline_ansible_user }}"
+    password: "{{ vault_ansible_account_password }}"
+    update_password: on_create
+    password_never_expires: true
+    groups:
+      - Administrators
+    groups_action: add
+    state: present
+  when: baseline_create_ansible_account | bool

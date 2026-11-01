@@ -1,0 +1,11 @@
+---
+- name: Configuration de base des machines Linux
+  hosts: linux
+  become: true
+  roles:
+    - linux_baseline
+
+- name: Configuration de base des machines Windows
+  hosts: windows
+  roles:
+    - windows_baseline

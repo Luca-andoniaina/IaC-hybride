@@ -1,0 +1,42 @@
+---
+- name: Définir le nom d'hôte
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Définir le fuseau horaire
+  community.general.timezone:
+    name: "{{ baseline_timezone_linux }}"
+
+- name: Activer la synchronisation de l'heure
+  ansible.builtin.service:
+    name: systemd-timesyncd
+    state: started
+    enabled: true
+
+- name: Mettre à jour l'index des paquets
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Créer le compte dédié à Ansible
+  ansible.builtin.user:
+    name: "{{ baseline_ansible_user }}"
+    shell: /bin/bash
+    groups: sudo
+    append: true
+    password_lock: true
+  when: baseline_create_ansible_account | bool
+
+- name: Autoriser sudo sans mot de passe au compte dédié
+  ansible.builtin.copy:
+    dest: "/etc/sudoers.d/90-{{ baseline_ansible_user }}"
+    content: "{{ baseline_ansible_user }} ALL=(ALL) NOPASSWD:ALL\n"
+    mode: "0440"
+    validate: "visudo -cf %s"
+  when: baseline_create_ansible_account | bool
+
+- name: Déposer la clé publique du nœud de contrôle sur le compte dédié
+  ansible.posix.authorized_key:
+    user: "{{ baseline_ansible_user }}"
+    key: "{{ lookup('ansible.builtin.file', '~/.ssh/id_ed25519.pub') }}"
+  when: baseline_create_ansible_account | bool

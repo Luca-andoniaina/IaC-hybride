@@ -1,0 +1,19 @@
+---
+- name: Collecter l'inventaire des machines
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Écrire le rapport d'inventaire de la machine
+      ansible.builtin.copy:
+        dest: "{{ playbook_dir }}/../reports/inventaire_{{ inventory_hostname }}.md"
+        mode: "0644"
+        content: |
+          # Inventaire : {{ inventory_hostname }}
+
+          - Adresse : {{ ansible_host | default('n/a') }}
+          - Nom d'hôte : {{ ansible_facts['hostname'] | default('n/a') }}
+          - Système : {{ ansible_facts['distribution'] | default('n/a') }} {{ ansible_facts['distribution_version'] | default('') }}
+          - Mémoire (Mo) : {{ ansible_facts['memtotal_mb'] | default('n/a') }}
+          - Date de collecte : {{ ansible_facts['date_time']['iso8601'] | default('n/a') }}
+      delegate_to: localhost
+      become: false
