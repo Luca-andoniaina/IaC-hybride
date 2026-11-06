@@ -1,0 +1,11 @@
+---
+- name: Durcissement des machines Linux
+  hosts: linux
+  become: true
+  roles:
+    - linux_hardening
+
+- name: Durcissement des machines Windows 11
+  hosts: windows11
+  roles:
+    - windows_hardening

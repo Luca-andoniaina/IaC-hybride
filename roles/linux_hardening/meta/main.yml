@@ -1,0 +1,6 @@
+---
+dependencies:
+  - role: devsec.hardening.os_hardening
+    vars:
+      os_security_kernel_enable_module_loading: true
+      os_auditd_enabled: true

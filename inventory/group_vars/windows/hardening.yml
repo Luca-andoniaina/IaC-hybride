@@ -1,0 +1,14 @@
+---
+# Variables du rôle ansible-lockdown Windows-11-CIS (tag 3.0.2), fixées par le projet.
+# Exclut les 17 contrôles qui risquent de couper l'accès WinRM du laboratoire.
+win_skip_for_test: true
+skip_reboot: true
+
+win11cis_admin_username: admin_lab
+win11cis_guest_username: guest_lab
+
+win11cis_legal_notice_caption: "Avis"
+win11cis_legal_notice: "Systeme de laboratoire reserve aux personnes autorisees."
+
+# Exclu : ce controle remet LocalAccountTokenFilterPolicy a 0 et coupe WinRM (compte local, sans domaine)
+win11cis_rule_18_4_1: false

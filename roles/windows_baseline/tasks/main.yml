@@ -2,12 +2,12 @@
 - name: Définir le nom d'hôte
   ansible.windows.win_hostname:
     name: "{{ inventory_hostname }}"
-  register: baseline_hostname
+  register: windows_baseline_hostname
 
 - name: Redémarrer la machine si le nom a changé
   ansible.windows.win_reboot:
     reboot_timeout: 1800
-  when: baseline_hostname.reboot_required
+  when: windows_baseline_hostname.reboot_required
 
 - name: Définir le fuseau horaire
   ansible.windows.win_timezone:

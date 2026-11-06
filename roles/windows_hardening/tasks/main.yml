@@ -1,0 +1,36 @@
+---
+- name: Journaliser le passage du durcissement
+  ansible.builtin.debug:
+    msg: "Durcissement os_hardening appliqué sur {{ inventory_hostname }}"
+
+- name: Pare-feu local Ubuntu
+  tags: [firewall]
+  block:
+    - name: Autoriser SSH depuis le nœud de contrôle
+      community.general.ufw:
+        rule: allow
+        proto: tcp
+        port: "22"
+        from_ip: "{{ firewall_control_node_ip }}"
+        comment: "SSH depuis le noeud de controle"
+
+    - name: Autoriser SSH depuis la passerelle NAT (gestion Vagrant du laboratoire)
+      community.general.ufw:
+        rule: allow
+        proto: tcp
+        port: "22"
+        from_ip: "{{ firewall_vagrant_nat_ip }}"
+        comment: "SSH gestion Vagrant (laboratoire)"
+
+    - name: Refuser par défaut les connexions entrantes
+      community.general.ufw:
+        default: deny
+        direction: incoming
+
+    - name: Journaliser les paquets refusés
+      community.general.ufw:
+        logging: low
+
+    - name: Activer le pare-feu
+      community.general.ufw:
+        state: enabled

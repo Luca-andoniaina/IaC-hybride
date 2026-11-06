@@ -7,3 +7,5 @@ ansible_winrm_server_cert_validation: ignore
 ansible_user: vagrant
 ansible_password: "{{ vault_windows_password }}"
 baseline_timezone_windows: "E. Africa Standard Time"
+ansible_winrm_operation_timeout_sec: 120
+ansible_winrm_read_timeout_sec: 150
