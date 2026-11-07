@@ -4,7 +4,7 @@
     msg: "Durcissement os_hardening appliqué sur {{ inventory_hostname }}"
 
 - name: Pare-feu local Ubuntu
-  tags: [firewall]
+  tags: [iac_firewall]
   block:
     - name: Autoriser SSH depuis le nœud de contrôle
       community.general.ufw:

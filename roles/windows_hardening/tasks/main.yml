@@ -1,36 +1,38 @@
 ---
 - name: Journaliser le passage du durcissement
   ansible.builtin.debug:
-    msg: "Durcissement os_hardening appliqué sur {{ inventory_hostname }}"
+    msg: "Durcissement CIS niveau 1 appliqué sur {{ inventory_hostname }}"
 
-- name: Pare-feu local Ubuntu
+- name: Pare-feu local Windows
   tags: [firewall]
   block:
-    - name: Autoriser SSH depuis le nœud de contrôle
-      community.general.ufw:
-        rule: allow
-        proto: tcp
-        port: "22"
-        from_ip: "{{ firewall_control_node_ip }}"
-        comment: "SSH depuis le noeud de controle"
+    - name: Autoriser WinRM HTTPS depuis le nœud de contrôle uniquement
+      community.windows.win_firewall_rule:
+        name: "IaC - WinRM HTTPS depuis le noeud de controle"
+        direction: in
+        action: allow
+        protocol: tcp
+        localport: "5986"
+        remoteip: "{{ firewall_control_node_ip }}"
+        profiles: [domain, private, public]
+        enabled: true
+        state: present
 
-    - name: Autoriser SSH depuis la passerelle NAT (gestion Vagrant du laboratoire)
-      community.general.ufw:
-        rule: allow
-        proto: tcp
-        port: "22"
-        from_ip: "{{ firewall_vagrant_nat_ip }}"
-        comment: "SSH gestion Vagrant (laboratoire)"
+    - name: Supprimer les règles WinRM ouvertes à tous (script d'amorçage et box Packer)
+      community.windows.win_firewall_rule:
+        name: "{{ item }}"
+        state: absent
+      loop:
+        - "WinRM HTTPS (lab)"
+        - "WinRM-Packer"
 
-    - name: Refuser par défaut les connexions entrantes
-      community.general.ufw:
-        default: deny
-        direction: incoming
-
-    - name: Journaliser les paquets refusés
-      community.general.ufw:
-        logging: low
-
-    - name: Activer le pare-feu
-      community.general.ufw:
-        state: enabled
+    - name: Bloquer le Bureau à distance en entrée
+      community.windows.win_firewall_rule:
+        name: "IaC - Blocage RDP entrant"
+        direction: in
+        action: block
+        protocol: tcp
+        localport: "3389"
+        profiles: [domain, private, public]
+        enabled: true
+        state: present
