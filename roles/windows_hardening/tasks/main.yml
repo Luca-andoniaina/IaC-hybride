@@ -4,7 +4,7 @@
     msg: "Durcissement CIS niveau 1 appliqué sur {{ inventory_hostname }}"
 
 - name: Pare-feu local Windows
-  tags: [firewall]
+  tags: [iac_firewall]
   block:
     - name: Autoriser WinRM HTTPS depuis le nœud de contrôle uniquement
       community.windows.win_firewall_rule:
@@ -13,7 +13,7 @@
         action: allow
         protocol: tcp
         localport: "5986"
-        remoteip: "{{ firewall_control_node_ip }}"
+        remoteip: "{{ windows_hardening_firewall_control_node_ip }}"
         profiles: [domain, private, public]
         enabled: true
         state: present

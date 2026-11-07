@@ -11,7 +11,7 @@
         rule: allow
         proto: tcp
         port: "22"
-        from_ip: "{{ firewall_control_node_ip }}"
+        from_ip: "{{ linux_hardening_firewall_control_node_ip }}"
         comment: "SSH depuis le noeud de controle"
 
     - name: Autoriser SSH depuis la passerelle NAT (gestion Vagrant du laboratoire)
@@ -19,7 +19,7 @@
         rule: allow
         proto: tcp
         port: "22"
-        from_ip: "{{ firewall_vagrant_nat_ip }}"
+        from_ip: "{{ linux_hardening_firewall_vagrant_nat_ip }}"
         comment: "SSH gestion Vagrant (laboratoire)"
 
     - name: Refuser par défaut les connexions entrantes

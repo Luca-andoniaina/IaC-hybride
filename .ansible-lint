@@ -1,0 +1,4 @@
+---
+exclude_paths:
+  - .ansible/
+  - inventory/group_vars/windows/vault.yml
